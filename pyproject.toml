@@ -1,0 +1,25 @@
+[project]
+name = "code-generator"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "nileshtn", email = "tjnilesh55@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "jinja2>=3.1.6",
+    "langchain>=1.4.3",
+    "langchain-core>=1.6.5",
+    "langchain-ollama>=1.1.0",
+    "langgraph>=1.2.12",
+    "pyyaml>=6.0.3",
+    "typer>=0.27.2",
+]
+
+[project.scripts]
+code-generator = "code_generator:main"
+
+[build-system]
+requires = ["uv_build>=0.12.4,<0.13.0"]
+build-backend = "uv_build"
