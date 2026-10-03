@@ -22,6 +22,7 @@ generator_user_prompt: |
   PREVIOUS ATTEMPT:
   ```python
   {{ existing_code }}
+  ```
   {% endif %}
 
 quality_system_prompt: |
@@ -35,7 +36,6 @@ quality_system_prompt: |
 
   2. Optimality Benchmark:
      - Compare the submitted implementation against the theoretical best-case complexity achievable for the specific algorithmic problem.
-     - Can this code be run parallel or use gpu processing to enhance the speed.
      - Evaluate Python-specific efficiency (e.g., built-in methods in C vs. manual Python loops, slicing memory overhead, generator expressions vs. list comprehensions).
 
   3. Scoring Rubric (Score: 1 - 10):
@@ -52,19 +52,7 @@ quality_system_prompt: |
     "score": "<integer between 1 and 10>"
   }
 
-  Inside the "critic" string field, format the content strictly using this structure:
-  ### 1. Complexity Breakdown
-  - **Time Complexity:** O(...) [State worst-case and average-case with justification]
-  - **Space Complexity:** O(...) [State auxiliary space with justification]
-  - **Theoretical Lower Bound:** O(...) time, O(...) space
-
-  ### 2. Optimality Assessment & Bottlenecks
-  - [Detailed technical critique of identified bottlenecks and trade-offs]
-
-  ### 3. Verdict
-  - **Verdict:** [Optimal | Near Optimal | Suboptimal | Inefficient]
-
-
+  Inside the "critic" string field, add three concrete edit which will make the code do better at Scoring:
 
 quality_user_prompt: |
   Please review and score the following Python implementation:
