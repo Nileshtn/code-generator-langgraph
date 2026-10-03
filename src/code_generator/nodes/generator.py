@@ -1,28 +1,27 @@
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama import ChatOllama
 from langchain_core.output_parsers import StrOutputParser
-from code_generator.config import prompt, model_config
+from code_generator.core.llm import core_llm
+from code_generator.config import prompt
 from code_generator.core.state import codeState
 from code_generator import logger
 import re
 
+FENCE_PATTERN = re.compile(r"```(?:python)?\s*([\s\S]*?)\s*```", flags=re.IGNORECASE)
 
 def extract_raw_code(llm_output: str) -> str:
     """Extracts raw code from markdown fences if present, otherwise returns stripped text."""
-    pattern = r"```(?:python)?\s*([\s\S]*?)\s*```"
-    match = re.search(pattern, llm_output, re.IGNORECASE)
+    match = FENCE_PATTERN.search(llm_output)
     if match:
         return match.group(1).strip()
     return llm_output.strip()
 
-
-generator_llm = ChatOllama(model=model_config['model'], temperature=model_config['temp'])
 prompt = ChatPromptTemplate([('system', prompt['generator_system_prompt']), 
                              ('human', prompt['generator_user_prompt'])], 
                              template_format="jinja2").partial(existing_code=None, feedback_type=None, feedback=None)
 
 
-chain = prompt | generator_llm | StrOutputParser() | extract_raw_code
+chain = prompt | core_llm | StrOutputParser() | extract_raw_code
 
 
 def code_generator_node(state : codeState):
@@ -51,7 +50,7 @@ def code_generator_node(state : codeState):
                                                 })
 
 
-    return {"code" : response, "feedback_type" : "", "feedback" : ""}
+    return {"code" : response, "feedback_type" : "syntax_check", "feedback" : ""}
 
 
         
