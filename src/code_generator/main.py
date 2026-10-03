@@ -1,4 +1,4 @@
-from code_generator.core import app
+from code_generator.core import generator_graph_app
 import argparse
 
 def main():
@@ -11,7 +11,7 @@ def main():
                         help= "prompt to generate the code!")
 
     args = parser.parse_args()
-
+    app = generator_graph_app()
 
     if args.prompt:
         app.invoke({"query": args.prompt,

@@ -11,7 +11,6 @@ from code_generator import logger
 
 def generator_graph_app():
     logger.info("graph created!")
-    logger.info(f"state : {codeState}")
     workflow = StateGraph(codeState)
 
     workflow.add_node('generator', code_generator_node)
@@ -20,7 +19,8 @@ def generator_graph_app():
     workflow.add_node("write_file", write_file)
 
     workflow.add_edge(START, 'generator')
-    workflow.add_conditional_edges('generator',
+    workflow.add_edge('generator', "syntax_checker")
+    workflow.add_conditional_edges('syntax_checker',
                                    error_route,
                                    {'error' : 'generator',
                                     'review_code' : 'code_reviewer'})
@@ -32,5 +32,3 @@ def generator_graph_app():
     
     return workflow.compile()
 
-
-app = generator_graph_app()

@@ -1,1 +1,1 @@
-from code_generator.core.graph import app
+from code_generator.core.graph import generator_graph_app
