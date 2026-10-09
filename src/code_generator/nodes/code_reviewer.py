@@ -33,8 +33,6 @@ def code_reviewer_node(state : codeState):
     if state["feedback_type"] == "review_code" and state['itr'] < state['max_itr']:
         logger.info(f"reviewing code (itr : {state['itr']})")
         response:CodeReviewResult = chain.invoke({"code" : state["code"]})
-    
-    new_itr_num = state["itr"] + 1
 
     if not response:
         logger.info(f"""no response generated, max itr state : {state['itr']>=state['max_itr']},
@@ -47,7 +45,7 @@ def code_reviewer_node(state : codeState):
         logger.info(f"current code score {response.score}, refactoring again")
         return {"feedback_type" : "refactor",
                 "feedback" : response.critic,
-                "itr" : new_itr_num}
+                "itr_history" : state["itr_history"].append("refactor")}
 
     else:
         logger.info(f"current code score {response.score}, got a good code!")
@@ -58,5 +56,5 @@ def code_reviewer_node(state : codeState):
 
 def review_route(state : codeState):
     if state["feedback_type"] == "":
-        return "write"
+        return "sandbox"
     return "refactor"

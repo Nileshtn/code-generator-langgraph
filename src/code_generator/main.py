@@ -17,4 +17,5 @@ def main():
         app.invoke({"query": args.prompt,
                     "itr" : 0,
                     "max_itr" : 5,
-                    "feedback_type" : ""})
+                    "feedback_type" : "",
+                    "itr_history" : []})

@@ -36,21 +36,28 @@ def code_generator_node(state : codeState):
         - ""
     '''
 
+    if state["max_itr"] <= state["itr"]:
+        return {"feedback_type" : "end"}
+
     if state["feedback_type"] == "":
         logger.info("generating code for the first time...")
         response = chain.invoke({'problem_statement' : state["query"]})
-        return {"code" : response}
+
+        return {"code" : response,
+                "itr" : state["itr"] + 1}
 
     logger.info(f"refactoring code , type : {state['feedback_type']}")
 
     response = chain.invoke({"problem_statement" : state["query"],
                             "existing_code" : state["code"],
                             "feedback_type" : state["feedback_type"],
-                            "feedback" : state["feedback"]
-                                                })
+                            "feedback" : state["feedback"],})
 
 
-    return {"code" : response, "feedback_type" : "syntax_check", "feedback" : ""}
+    return {"code" : response, 
+            "feedback_type" : "syntax_check", 
+            "feedback" : "",
+            "itr" : state["itr"] + 1}
 
 
         
